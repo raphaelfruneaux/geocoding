@@ -1,22 +1,16 @@
 'use strict'
 
+console.log(process.env.apikey)
+
 const request = require('sync-request')
-const mongoose = require('mongoose')
-const NodeGeocoder = require('node-geocoder')
+const MongoClient = require('mongodb').MongoClient
 
-const options = {
-    provider: 'google',
-    formatter: null         // 'gpx', 'string', ...
-}
+const APIconf = require('./config/api')
+const db = require('./config/db')
 
-const geocoder = NodeGeocoder(options)
+const collection = db.collection('establishments_geocoding')
 
-geocoder.geocode('Rua Manoel Lino, 40720-460, salvador')
-.then((res) => {
-    console.log(res)
-    if (res.length > 0)
-        console.log(`${res[0].latitude},${res[0].longitude}`)
-})
-.catch((err) => {
-    console.log(err)
+collection.findOne({ 'coords' : { $exists: false }}).then((docs) => {
+    console.log(`Find record!`)
+    console.log(`Doc: ${docs.nomeFantasia}`)
 })
