@@ -1,7 +1,5 @@
 'use strict'
 
-console.log(process.env.apikey)
-
 const request = require('sync-request')
 const MongoClient = require('mongodb').MongoClient
 
