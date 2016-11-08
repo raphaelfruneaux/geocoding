@@ -9,7 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "mongodb": "^2.2.11",
     "node-geocoder": "^3.15.1",
     "promised-mongo": "^1.2.0",
     "sync-request": "^3.0.1"

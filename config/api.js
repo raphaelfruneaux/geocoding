@@ -1,5 +1,9 @@
 const apiKey = process.env.APIKEY || '<apikey>'
 
-module.exports = {
-    baseURL: `https://maps.googleapis.com/maps/api/place/textsearch/json?key=${apiKey}&`
-}
+const apiBaseUrl = 'https://maps.googleapis.com/maps/api'
+const endpoints = {}
+
+endpoints.places = `${apiBaseUrl}/place/textsearch/json?key=${apiKey}&`
+endpoints.geodoce = `${apiBaseUrl}/`
+
+module.exports.endpoints = endpoints
