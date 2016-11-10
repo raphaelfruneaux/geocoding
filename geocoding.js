@@ -42,7 +42,14 @@ const fetchPlace = (doc) => {
         // fetchGeocode(doc)
     }
 
-    
+    establishments.update(
+        { _id: doc._id },
+        { $set: 
+            {
+                gmapinfo: data
+            }
+        }
+    )
 }
 
 const fetchGeocode = (doc) => {
