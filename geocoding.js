@@ -5,9 +5,12 @@ const request = require('sync-request')
 const APIconf = require('./config/api')
 const db = require('./config/db')
 
+const delay = require('./modules/delay')
+
 const establishments = db.collection('establishments_geocoding')
 const query = { 'coords': { $exists: false } }
 const MAX_REQUEST = 1 
+const TIMEOUT = 2000
 
 let count = 0
 
@@ -30,26 +33,30 @@ const fetchPlace = (doc) => {
     console.log(`[Place] Requesting Place: ${doc.nomeFantasia}`)
     console.log(`[Place] Requesting URL: ${url}`)
 
-    let res = request('GET', url)
-    let data = JSON.parse(res.getBody())
+    return delay(TIMEOUT).then(() => {
+        let res = request('GET', url)
+        let data = JSON.parse(res.getBody())
 
-    console.log('**********')
-    console.log(data)
-    console.log('**********')
+        console.log('**********')
+        console.log(data)
+        console.log('**********')
 
-    if (data.status == 'ZERO_RESULTS') {
-        return
-        // fetchGeocode(doc)
-    }
-
-    establishments.update(
-        { _id: doc._id },
-        { $set: 
-            {
-                gmapinfo: data
-            }
+        if (data.status == 'ZERO_RESULTS') {
+            return
+            // fetchGeocode(doc)
         }
-    )
+
+        establishments.update(
+            { _id: doc._id },
+            { $set: 
+                {
+                    gmapinfo: data
+                }
+            }
+        ).then((doc) => {
+            console.log(`[Success] Doc: ${doc.nomeFantasia} updated successfully`)
+        })
+    })
 }
 
 const fetchGeocode = (doc) => {
