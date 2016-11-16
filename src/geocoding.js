@@ -9,9 +9,9 @@ const utils = require('./modules/utils')
 const sleep = require('./modules/sleep')
 
 const establishments = db.collection('establishments_geocoding')
-const query = { 'coords': { $exists: false } }
+const query = { 'crawler_read': { $exists: false } }
 const MAX_REQUEST = 5000 
-const TIMEOUT = 1000
+const TIMEOUT = 2000
 
 let count = 0
 
@@ -55,8 +55,10 @@ const synchronize = async () => {
     if (count == MAX_REQUEST)
         return
     
-    if (count > 0)
+    if (count > 0) {
+        console.log(`${prefix} Sleeping...`)
         await sleep(TIMEOUT)
+    }
 
     return establishments.count(query).then((c) => {
         if (!c)
@@ -83,6 +85,18 @@ const synchronize = async () => {
                     console.log(`-----------------------------`)
                 })
             }
+
+            establishments
+                .update({ _id: doc._id }, { $set: { 'crawler_read': true } })
+                .then((doc) => {
+                    console.log(`${prefix}[Success] Crawler read Doc ${doc.nomeFantasia}`)
+                })
+                .catch((err) => {
+                    console.log('ERROR', err)
+                })
+                .then(() => {
+                    console.log(`-----------------------------`)
+                })
         })
         .then(() => {
             count++ 
