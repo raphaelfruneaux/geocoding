@@ -8,7 +8,7 @@ const db = require('./config/db')
 const utils = require('./modules/utils')
 const sleep = require('./modules/sleep')
 
-const establishments = db.collection('establishments_geocoding')
+const establishments = db.collection('establishments_crawler')
 const query = { 'crawler_read': { $exists: false } }
 const MAX_REQUEST = 5000 
 const TIMEOUT = 2000
